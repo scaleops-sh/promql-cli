@@ -75,7 +75,9 @@ func TerminalSize() (dimensions TermDimensions, err error) {
 	sttySize.Stdin = os.Stdin
 	stdout, err = sttySize.Output()
 	if err != nil {
-		return dimensions, err
+		dimensions.Height = 60
+		dimensions.Width = 214
+		return dimensions, nil
 	}
 	o := strings.TrimSuffix(string(stdout), "\n")
 	d := strings.Split(o, " ")

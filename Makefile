@@ -53,3 +53,13 @@ help: ## Print Makefile help
 	@awk '$$4 == "##" {gsub(/\?=./, "", $$0); $$2="(default: "$$2")"; printf "-- %s \n", $$0}' Makefile
 	@echo "#### Targets ####"
 	@awk '$$1 ~ /^.*:$$/ {gsub(":", "", $$1);printf "-- %s \n", $$0}' Makefile
+
+release-single-scaleops:
+	$(GO_BUILD)
+	aws s3 cp build/bin/$(GOOS)/$(GOARCH)/promql s3://test-so/promql-$(GOOS)-$(GOARCH)
+
+release-scaleops:
+	OS="darwin" ARCH="amd64" make release-single-scaleops
+	OS="darwin" ARCH="arm64" make release-single-scaleops
+	OS="linux" ARCH="amd64" make release-single-scaleops
+	OS="linux" ARCH="arm64" make release-single-scaleops

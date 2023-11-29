@@ -29,6 +29,7 @@ import (
 	"github.com/prometheus/common/config"
 	"github.com/prometheus/common/model"
 ) // Client is our prometheus v1 API interface
+
 type Client interface {
 	v1.API
 }
@@ -131,11 +132,15 @@ func parseRangeEnd(e string) (time.Time, error) {
 	if e == "now" {
 		return time.Now(), nil
 	}
-	t, err := time.Parse(time.RFC3339, e)
-	if err != nil {
-		return time.Time{}, fmt.Errorf("error parsing range end time, %v", err)
+	t, err1 := time.Parse(time.RFC3339, e)
+	if err1 == nil {
+		return t, nil
 	}
-	return t, nil
+	d, err2 := time.ParseDuration(e)
+	if err2 == nil {
+		return time.Now().Add(-d), nil
+	}
+	return time.Time{}, fmt.Errorf("error parsing range end time, err1=%v, err2=%v", err1, err2)
 }
 
 // getRange creates a prometheus range from the provided start, end, and step options
