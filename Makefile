@@ -56,7 +56,7 @@ help: ## Print Makefile help
 
 release-single-scaleops:
 	$(GO_BUILD)
-	aws s3 cp build/bin/$(GOOS)/$(GOARCH)/promql s3://test-so/promql-$(GOOS)-$(GOARCH)
+	aws s3 cp build/bin/$(GOOS)/$(GOARCH)/promql s3://scaleops-remote-support/s3/promql-$(GOOS)-$(GOARCH)
 
 release-scaleops:
 	OS="darwin" ARCH="amd64" make release-single-scaleops
